@@ -29,9 +29,9 @@ int main(int argc, char** argv) {
   XFlush(display);
   socket = open_listening_socket();
   Recieved* rcv;
-  cout<<"-"<<endl;
+  cout << "-" << endl;
   rcv = get_data(socket);
-  cout<<"-"<<endl;
+  cout << "-" << endl;
   cout.write(rcv->data, max(rcv->count, 512));
   cout.flush();
   cout << "Hello World" << endl;
