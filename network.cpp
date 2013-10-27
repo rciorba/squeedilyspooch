@@ -1,30 +1,17 @@
 #include<iostream>
-#include<cstdlib>
 #include<cstring>
-#include<cerrno>
 
 extern "C"{
 #include<sys/socket.h>
 #include <netinet/in.h>	/* needed for sockaddr_in */
 }
 
-
 #include"network.h"
+#include"util.h"
+
+
 using namespace std;
 char buffer[512] = {};
-
-void die(int status_code, char* msg=NULL) {
-  if(status_code >= 0){ //handle stuff that returns -1 instead of a valid FD
-    return;
-  }
-  cout << "He's dead, Jim!" << endl;
-  cout << "returned:" << status_code << endl;
-  cout << errno <<endl;
-  if (msg != NULL) {
-    cout << msg << endl;
-  }
-  exit(1);
-}
 
 int open_listening_socket(void) {
   int sock_fd;
@@ -46,10 +33,9 @@ Recieved* get_data(int sock) {
   memset((void*)&from_addr, 0, sizeof from_addr);
   rcv = new Recieved();
   rcv->data = buffer;
-  cout<<"recv"<<endl;
-  cout << sizeof buffer<< "  "<< (void*)buffer << endl;
+  // cout<<"recv"<<endl;
+  // cout << sizeof buffer<< "  "<< (void*)buffer << endl;
   die(rcv->count = recvfrom(sock, (void*)buffer, 512 , 0, (sockaddr*)&from_addr, &addr_len));
-  cout<<"count:"<<rcv->count<<endl;
+  // cout<<"count:"<<rcv->count<<endl;
   return rcv;
-
 }
