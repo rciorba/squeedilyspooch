@@ -1,7 +1,7 @@
 all: build
 
 build:
-	-g++ -Wall -o remote remote.cpp -lX11 -lXtst
+	-g++ -Wall -o remote remote.cpp network.cpp -lX11 -lXtst
 
 .PHONY : clean
 clean:

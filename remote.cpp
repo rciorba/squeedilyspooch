@@ -6,11 +6,15 @@ extern "C"{
 #include <X11/Xresource.h>
 #include <X11/extensions/XTest.h>
 }
+
+#include "network.h"
+
 using namespace std;
 
 int main(int argc, char** argv) {
   Display* display = XOpenDisplay(":0");
   int ev_br, er_br, maj_v, min_v;
+  int socket;
   if (XTestQueryExtension(display, &ev_br, &er_br, &maj_v, &min_v)) {
     cout << "XTestQuery is supported" << endl;
   }
@@ -23,5 +27,12 @@ int main(int argc, char** argv) {
   XTestFakeButtonEvent(display, 1, False, CurrentTime);
 
   XFlush(display);
+  socket = open_listening_socket();
+  Recieved* rcv;
+  cout<<"-"<<endl;
+  rcv = get_data(socket);
+  cout<<"-"<<endl;
+  cout.write(rcv->data, max(rcv->count, 512));
+  cout.flush();
   cout << "Hello World" << endl;
 }
