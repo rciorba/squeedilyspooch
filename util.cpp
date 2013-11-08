@@ -5,7 +5,7 @@
 using namespace std;
 
 void die(int status_code, char* msg=NULL) {
-  if(status_code >= 0){ //handle stuff that returns -1 instead of a valid FD
+  if(status_code == 0){
     return;
   }
   cout << "He's dead, Jim!" << endl;
