@@ -12,11 +12,52 @@ extern "C"{
 using namespace std;
 
 
-// void dispatch_messages(int sock){
-//   Recieved* rcv = gett_data(sock);
-//   msg
+class MDisplay {
+  Display* disp;
+  // uint32_t SIGN_X = 1;
+ public:
+  MDisplay();
+  void mouse_move(uint32_t arg);
+  void mouse_press(void);
+  void mouse_release(void);
+};
 
-// }
+MDisplay::MDisplay(){
+  disp = XOpenDisplay(":0");
+}
+
+void MDisplay::mouse_move(uint32_t arg) {
+}
+
+void MDisplay::mouse_press() {
+}
+
+void MDisplay::mouse_release() {
+}
+void dispatch_message(MDisplay display, Message* msg){
+  // switch(msg->cmd){
+  // case Messages::M_MOVE:
+  // }
+  // this won't work; needs constexpr
+  if (msg->cmd == Messages::M_MOVE){
+    display.mouse_move(msg->arg);
+  } else if(msg->cmd == Messages::M_PRESS1) {
+    display.mouse_press();
+  } else if(msg->cmd == Messages::M_RELEASE1) {
+    display.mouse_release();
+  }
+}
+
+
+void dispatch_messages(MDisplay display, int sock){
+  Recieved* rcv = get_data(sock);
+  Message** messages = Message::from_recieved(rcv);
+  int i = 0;
+  while(messages[i]) {
+    dispatch_message(display, messages[i]);
+    i++;
+  }
+}
 
 int main(int argc, char** argv) {
   // Display* display = XOpenDisplay(":0");
@@ -26,7 +67,7 @@ int main(int argc, char** argv) {
   //   cout << "XTestQuery is supported" << endl;
   // }
   // /* XTestFakeMotionEvent(display, screen_number, x, y, delay); */
-  // // XTestFakeMotionEvent(display, -1, 1, 1, CurrentTime);
+  // // XTestFakeMotionEvent(display, -1, 1, 1, CurrentTime); 
   // // XWarpPointer(display, None, 0, 0, 0, 0, 0, 100, 100);
   // XTestFakeButtonEvent(display, 1, True, CurrentTime);
 
@@ -55,6 +96,7 @@ int main(int argc, char** argv) {
   rcvd.count = sizeof txt;
   Message** messages = Message::from_recieved(&rcvd);
   int i=0;
+  cout<<(1<<1)<<endl;
   while(messages[i]){
     cout<<"spam!"<<endl;
     i++;
