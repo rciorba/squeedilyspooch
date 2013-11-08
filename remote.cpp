@@ -30,9 +30,16 @@ int main(int argc, char** argv) {
   socket = open_listening_socket();
   Recieved* rcv;
   cout << "-" << endl;
-  rcv = get_data(socket);
-  cout << "-" << endl;
-  cout.write(rcv->data, max(rcv->count, 512));
-  cout.flush();
+  // rcv = get_data(socket);
+  // cout << "-" << endl;
+  // cout.write(rcv->data, max(rcv->count, 512));
+  // cout.flush();
   cout << "Hello World" << endl;
+  unsigned int i = 0;
+  char txt[] = {0,1,0,0,0,0};
+  cout<<txt<<endl;
+  i=*(uint16_t*)txt;
+
+  cout<<i;
+
 }

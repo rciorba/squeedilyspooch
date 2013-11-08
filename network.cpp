@@ -9,9 +9,19 @@ extern "C"{
 #include"network.h"
 #include"util.h"
 
-
 using namespace std;
 char buffer[512] = {};
+
+Message::Message(char* data){
+  cmd = *(uint16_t*) data;
+  arg = *(uint32_t*) (data+2);
+}
+
+char* Message::encode(void){
+  ;
+}
+
+
 
 int open_listening_socket(void) {
   int sock_fd;
