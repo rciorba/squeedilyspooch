@@ -13,6 +13,13 @@ struct s_recieved {
 typedef struct s_recieved Recieved;
 
 
+class Messages {
+public:
+  static uint16_t M_MOVE, M_PRESS1, M_RELEASE1;
+  static void initialize();
+};
+
+
 class Message{
   uint16_t cmd;
   uint32_t arg;

@@ -40,6 +40,8 @@ int main(int argc, char** argv) {
   cout<<txt<<endl;
   i=*(uint16_t*)txt;
 
-  cout<<i;
+  cout<<i<<endl;
+  Messages::initialize();
+  cout<<Messages::M_MOVE<<endl;
 
 }
