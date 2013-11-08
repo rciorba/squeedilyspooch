@@ -23,8 +23,11 @@ public:
 class Message{
   uint16_t cmd;
   uint32_t arg;
+  Message();
 public:
-  Message(char*);
+  static const size_t size = sizeof cmd + sizeof arg;
+  Message(const char*);
+  static Message** from_recieved(Recieved*);
   char* encode(void);
 };
 
