@@ -12,6 +12,18 @@ extern "C"{
 using namespace std;
 char buffer[512] = {};
 
+
+uint16_t Messages::M_MOVE;
+uint16_t Messages::M_PRESS1;
+uint16_t Messages::M_RELEASE1;
+
+
+void Messages::initialize(){
+  M_MOVE = htons(1);
+  M_PRESS1 = htons(2);
+  M_RELEASE1 = htons(3);
+}
+
 Message::Message(char* data){
   cmd = htons(*(uint16_t*) data);
   arg = htonl(*(uint32_t*) (data+2));
@@ -42,5 +54,6 @@ Recieved* get_data(int sock) {
   // cout << sizeof buffer<< "  "<< (void*)buffer << endl;
   die(rcv->count = recvfrom(sock, (void*)buffer, 512 , 0, (sockaddr*)&from_addr, &addr_len));
   // cout<<"count:"<<rcv->count<<endl;
+  Messages::initialize();
   return rcv;
 }
