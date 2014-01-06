@@ -24,8 +24,9 @@ class Message{
   Message();
 public:
   uint16_t cmd;
-  uint32_t arg;
-  static const size_t size = sizeof cmd + sizeof arg;
+  int16_t arg1;
+  int16_t arg2;
+  static const size_t size = sizeof cmd + sizeof arg1 + sizeof arg2;
   Message(const char*);
   static Message** from_recieved(Recieved*);
   char* encode(void);

@@ -11,14 +11,18 @@ extern "C"{
 
 using namespace std;
 char buffer[512] = {};
-
+int UNSIGNED_OFFSET = 1<<15;
 
 Message::Message(const char* data){
   cmd = htons(*(uint16_t*) data);
-  arg = htonl(*(uint32_t*) (data+2));
+  arg1 = (int)htons(*(uint16_t*) (data+2)) - UNSIGNED_OFFSET;
+  arg2 = (int)htons(*(uint16_t*) (data+4)) - UNSIGNED_OFFSET;
 }
 
 Message** Message::from_recieved(Recieved* rcv){
+  /**
+     returns NULL terminated list of pointers to Message
+   */
   die(rcv->count % Message::size,
       (char*)"recieved buffer should have been a multiple of 6");
   int count = rcv->count / Message::size;
@@ -26,7 +30,7 @@ Message** Message::from_recieved(Recieved* rcv){
   cout<<sizeof messages<<endl;
   //static_cast<Message*> (::operator new (sizeof(Message[count])));
   for(int i=0; i<count; i++) {
-    messages[i] = new Message(rcv->data);
+    messages[i] = new Message(rcv->data+(i*Message::size));
   }
   messages[count] = NULL;
   return messages;
@@ -55,7 +59,8 @@ Recieved* get_data(int sock) {
   rcv->data = buffer;
   // cout<<"recv"<<endl;
   // cout << sizeof buffer<< "  "<< (void*)buffer << endl;
-  die(rcv->count = recvfrom(sock, (void*)buffer, 512 , 0, (sockaddr*)&from_addr, &addr_len));
+  die(rcv->count = recvfrom(sock, (void*)buffer, Message::size*5, 0,
+                            (sockaddr*)&from_addr, &addr_len));
   // cout<<"count:"<<rcv->count<<endl;
   return rcv;
 }
