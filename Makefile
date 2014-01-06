@@ -7,4 +7,4 @@ build:
 clean:
 	-rm *.o
 check-syntax:
-	-g++ -Wall -o nul -S ${CHK_SOURCES}
+	-g++ -Wall -o /dev/null -S ${CHK_SOURCES}
