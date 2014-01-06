@@ -1,4 +1,5 @@
 #include<iostream>
+#include<cstring>
 
 extern "C"{
 #include <X11/Xlib.h>
@@ -17,34 +18,40 @@ class MDisplay {
   // uint32_t SIGN_X = 1;
  public:
   MDisplay();
-  void mouse_move(uint32_t arg);
-  void mouse_press(void);
-  void mouse_release(void);
+  void mouse_move(int x, int y);
+  void mouse_press(int btn);
+  void mouse_release(int btn);
 };
 
 MDisplay::MDisplay(){
+  // int ev_br, er_br, maj_v, min_v;
+  // die(!XTestQueryExtension(disp, &ev_br, &er_br, &maj_v, &min_v))
   disp = XOpenDisplay(":0");
 }
 
-void MDisplay::mouse_move(uint32_t arg) {
+void MDisplay::mouse_move(int x, int y) {
+  XWarpPointer(disp, None, 0, 0, 0, 0, 0, x, y);
 }
 
-void MDisplay::mouse_press() {
+void MDisplay::mouse_press(int btn) {
+  XTestFakeButtonEvent(disp, btn, True, CurrentTime);
 }
 
-void MDisplay::mouse_release() {
+void MDisplay::mouse_release(int btn) {
+  XTestFakeButtonEvent(disp, btn, False, CurrentTime);
 }
+
 void dispatch_message(MDisplay display, Message* msg){
   // switch(msg->cmd){
   // case Messages::M_MOVE:
   // }
   // this won't work; needs constexpr
   if (msg->cmd == Messages::M_MOVE){
-    display.mouse_move(msg->arg);
+    display.mouse_move(msg->arg1, msg->arg2);
   } else if(msg->cmd == Messages::M_PRESS1) {
-    display.mouse_press();
+    display.mouse_press(msg->arg1);
   } else if(msg->cmd == Messages::M_RELEASE1) {
-    display.mouse_release();
+    display.mouse_release(msg->arg1);
   }
 }
 
@@ -59,7 +66,8 @@ void dispatch_messages(MDisplay display, int sock){
   }
 }
 
-int main(int argc, char** argv) {
+
+int test(){
   // Display* display = XOpenDisplay(":0");
   // int ev_br, er_br, maj_v, min_v;
   // int socket;
@@ -84,8 +92,13 @@ int main(int argc, char** argv) {
   // cout.flush();
   Messages::initialize();
   cout << "Hello World" << endl;
+  // uint16_t uns = 3;
+  // uns <<= 15;
+  // cout << uns << endl;
+  // cout << (int16_t)uns << endl;
   // unsigned int i = 0;
-  char txt[] = {0,1,0,0,0,0, 0,1,0,0,0,0};
+  char txt[] = {0,1, 255,255, 0,0,
+                0,0, 0,255, 128,0};
   cout<<"sizeof input data "<<sizeof txt<<endl;
   // cout<<txt<<endl;
   // i=*(uint16_t*)txt;
@@ -96,11 +109,28 @@ int main(int argc, char** argv) {
   rcvd.count = sizeof txt;
   Message** messages = Message::from_recieved(&rcvd);
   int i=0;
-  cout<<(1<<1)<<endl;
   while(messages[i]){
-    cout<<"spam!"<<endl;
+    cout << "msg:" << messages[i]->arg1 << ";" << messages[i]->arg2 << ";" << endl;
     i++;
   }
   delete messages;
   cout<<"bye"<<endl;
+  return 0;
+}
+
+int main(int argc, char** argv) {
+  if (strcmp(argv[0], "tests")) {
+    return test();
+  }
+  Messages::initialize();
+  MDisplay display = MDisplay();
+  int socket;
+  socket = open_listening_socket();
+  Recieved* rcv;
+  while((rcv = get_data(socket))){
+    Message** messages = Message::from_recieved(rcv);
+    for(int i; messages[i]; i++){
+      dispatch_message(display, messages[i]);
+    }
+  }
 }
