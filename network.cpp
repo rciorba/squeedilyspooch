@@ -2,7 +2,7 @@
 #include<cstring>
 
 extern "C"{
-#include<sys/socket.h>
+#include <sys/socket.h>
 #include <netinet/in.h>	/* needed for sockaddr_in */
 }
 
@@ -13,6 +13,20 @@ using namespace std;
 char buffer[512] = {};
 int UNSIGNED_OFFSET = 1<<15;
 
+
+/******************************************************************************
+Wire protocol
+=============
+
+Each mesage is 48 bits long, composed of 3 big endian 16 bits integers,
+a command and 2 arguments.
+
+The messages are:
+ 1 mouse move
+ 2 mouse_btn_1_press
+ 3 mouse_btn_1_release
+
+******************************************************************************/
 Message::Message(const char* data){
   cmd = htons(*(uint16_t*) data);
   arg1 = (int)htons(*(uint16_t*) (data+2)) - UNSIGNED_OFFSET;
