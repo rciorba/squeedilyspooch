@@ -119,7 +119,7 @@ int test(){
 }
 
 int main(int argc, char** argv) {
-  if (strcmp(argv[0], "tests")) {
+  if ((argc>1) && (strcmp(argv[1], "tests") == 0)) {
     return test();
   }
   Messages::initialize();
