@@ -24,7 +24,7 @@ Message** Message::from_recieved(Recieved* rcv){
      returns NULL terminated list of pointers to Message
    */
   die(rcv->count % Message::size,
-      (char*)"recieved buffer should have been a multiple of 6");
+      "recieved buffer should have been a multiple of 6");
   int count = rcv->count / Message::size;
   Message** messages = new Message*[count+1];
   cout<<sizeof messages<<endl;
@@ -40,7 +40,8 @@ Message** Message::from_recieved(Recieved* rcv){
 int open_listening_socket(void) {
   int sock_fd;
   struct sockaddr_in server_addr;
-  die(sock_fd = socket(AF_INET, SOCK_DGRAM, 0));
+  die_fd(sock_fd = socket(AF_INET, SOCK_DGRAM, 0),
+      "could not open listening socket");
   memset((void*)&server_addr, 0, sizeof server_addr);
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
