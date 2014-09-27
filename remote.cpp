@@ -31,14 +31,17 @@ MDisplay::MDisplay(){
 
 void MDisplay::mouse_move(int x, int y) {
   XWarpPointer(disp, None, 0, 0, 0, 0, 0, x, y);
+  XFlush(disp);
 }
 
 void MDisplay::mouse_press(int btn) {
   XTestFakeButtonEvent(disp, btn, True, CurrentTime);
+  XFlush(disp);
 }
 
 void MDisplay::mouse_release(int btn) {
   XTestFakeButtonEvent(disp, btn, False, CurrentTime);
+  XFlush(disp);
 }
 
 void dispatch_message(MDisplay display, Message* msg){
