@@ -4,12 +4,12 @@
 
 using namespace std;
 
-void die(int status_code, const char* msg=NULL) {
-  if(status_code == 0){
+void die_nonzero(int value, const char* msg=NULL) {
+  if(value == 0){
     return;
   }
   cout << "He's dead, Jim!" << endl;
-  cout << "Call returned:" << status_code << endl;
+  cout << "Call returned:" << value << endl;
   cout << "Errno is:" << errno <<endl;
   if (msg != NULL) {
     cout << msg << endl;
@@ -17,12 +17,12 @@ void die(int status_code, const char* msg=NULL) {
   exit(1);
 }
 
-void die_fd(int fd, const char* msg=NULL) {
-  if(fd >= 0){
+void die(int value, const char* msg=NULL) {
+  if(value >= 0){
     return;
   }
   cout << "He's dead, Jim!" << endl;
-  cout << "Invalid file descriptor returned:" << fd << endl;
+  cout << "Call returned:" << value << endl;
   cout << "Errno is:" << errno <<endl;
   if (msg != NULL) {
     cout << msg << endl;

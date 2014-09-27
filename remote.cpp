@@ -52,6 +52,8 @@ void dispatch_message(MDisplay display, Message* msg){
     display.mouse_press(msg->arg1);
   } else if(msg->cmd == Messages::M_RELEASE1) {
     display.mouse_release(msg->arg1);
+  } else {
+    cout << "unmatched message:" << msg->cmd <<"; htons:" << htons(msg->cmd)<<endl;
   }
 }
 
