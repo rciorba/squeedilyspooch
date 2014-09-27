@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
   Recieved* rcv;
   while((rcv = get_data(socket))){
     Message** messages = Message::from_recieved(rcv);
-    for(int i; messages[i]; i++){
+    for(int i=0; messages[i]; i++){
       dispatch_message(display, messages[i]);
     }
   }
